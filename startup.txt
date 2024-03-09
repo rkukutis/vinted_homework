@@ -1,0 +1,4 @@
+RUN PROGRAM:
+run in project root directory  "./mvnw compile exec:java -Dexec.args="input.txt" -Dexec.mainClass="lt.vinted.Main""
+RUN TESTS:
+run in project root directory "./mvnw test"
