@@ -54,7 +54,7 @@ public class TransactionProcessor {
     }
 
     private void processInvalidString(String invalidString) {
-        System.out.println(invalidString);
+        // do something with the invalid string
     }
 
     private String processValidString(String transactionString) {
