@@ -1,14 +1,30 @@
-package lt.vinted;
+package lt.vinted.utility;
+
+import lt.vinted.persistence.FakeDatabase;
+import lt.vinted.enumerated.ShipmentSize;
+import lt.vinted.entity.ShippingProvider;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Optional;
 
 public class InputValidator {
+    private final FakeDatabase database;
 
-   public static String validateTransactionString(String transactionString) {
-        if (transactionString.trim().isBlank()) return null;
-        String[] transactionStringParts = transactionString.trim().split(" ");
+    public InputValidator(FakeDatabase database) {
+        this.database = database;
+    }
+
+    public String validateTransactionString(String transactionString) {
+        transactionString = transactionString.trim();
+        if (transactionString.isBlank()) return transactionString + "Ignored";
+        String[] transactionStringParts = {};
+        if (transactionString.contains(" ")) {
+            transactionStringParts = transactionString.split(" ");
+        } else {
+            return transactionString + " Ignored";
+        }
+        if (transactionStringParts.length != 3) return transactionString + " Ignored";
         if (!validateTimestamp(transactionStringParts[0]) || !validateSize(transactionStringParts[1]) ||
                 !validateProcessor(transactionStringParts[2])) {
             return transactionString + " Ignored";
@@ -17,7 +33,7 @@ public class InputValidator {
         return transactionString;
    }
 
-   private static boolean validateTimestamp(String timestampString) {
+   private boolean validateTimestamp(String timestampString) {
         // validate if string is valid
        if (timestampString == null || timestampString.isBlank()) {
            return false;
@@ -33,7 +49,7 @@ public class InputValidator {
        }
    }
 
-   private static boolean validateSize(String sizeString) {
+   private boolean validateSize(String sizeString) {
         if (sizeString == null || sizeString.isBlank() || sizeString.length() != 1) {
             return false;
         }
@@ -47,11 +63,10 @@ public class InputValidator {
         return charIsValid;
    }
 
-   private static boolean validateProcessor(String providerString) {
+   private boolean validateProcessor(String providerString) {
         // Each shipping provider entity has a short name in the database (LP or MR in this case)
-       // we could call a method here that queries the DB and checks if a processor with this name exists
        if (providerString.trim().isBlank()) return false;
-       Optional<ShippingProvider> providerOptional = MockDatabase.getInstance().getProviderByShortName(providerString);
+       Optional<ShippingProvider> providerOptional = database.getProviderByShortName(providerString);
        return providerOptional.isPresent();
    }
 }

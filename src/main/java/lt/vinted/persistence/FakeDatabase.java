@@ -1,43 +1,34 @@
-package lt.vinted;
+package lt.vinted.persistence;
+
+import lt.vinted.enumerated.ShipmentSize;
+import lt.vinted.entity.ShippingProvider;
+import lt.vinted.entity.Transaction;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class MockDatabase {
-
-    private static MockDatabase database_instance = null;
-
+public class FakeDatabase {
     private final List<Transaction> transactions;
     private final List<ShippingProvider> providers;
 
-    private MockDatabase() {
+    public FakeDatabase() {
         this.transactions = new ArrayList<>();
         this.providers = new ArrayList<>();
-        // These providers already exist when we receive new transactions
-        ShippingProvider laPoste = new ShippingProvider(
-                "La Poste", "LP", 1.5,4.9,6.9);
-        ShippingProvider mondialRelay = new ShippingProvider(
-                "Mondial Relay", "MR", 2,3,4);
-        providers.addAll(List.of(laPoste, mondialRelay));
     }
 
-    // I need the database object in multiple other classes, so I'm making it a singleton
-    public static MockDatabase getInstance() {
-        if (database_instance == null) {
-            database_instance = new MockDatabase();
-        }
-        return database_instance;
-    }
+    // Methods replicate SQL query functionality
 
-    public boolean createTransaction(Transaction newTransaction) {
-        if (transactions.contains(newTransaction)) {
-            throw new RuntimeException("Transaction already exists");
-        }
+    public void createTransaction(Transaction newTransaction) {
         transactions.add(newTransaction);
-        return true;
     }
+
+    public void createProvider(ShippingProvider newProvider) {
+        providers.add(newProvider);
+    }
+
+    // SELECT * FROM providers WHERE short_name='shortName';
     public Optional<ShippingProvider> getProviderByShortName(String shortName) {
         return providers.stream()
                 .filter(provider -> provider.getShortName().equals(shortName))

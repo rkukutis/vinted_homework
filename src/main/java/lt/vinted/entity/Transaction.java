@@ -1,6 +1,9 @@
-package lt.vinted;
+package lt.vinted.entity;
+
+import lt.vinted.enumerated.ShipmentSize;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Transaction {
     // Another simple entity class
@@ -9,11 +12,14 @@ public class Transaction {
     private final ShippingProvider provider;
 
     // although BigDecimal is more appropriate for storing financial information,
-    // I used double values for easier readability
+    // I used double values for convenience
     private double price;
     private double discount;
 
     public Transaction(LocalDate date, ShipmentSize size, ShippingProvider provider, double price, double discount) {
+        if (price < 0 || discount < 0) {
+            throw new IllegalArgumentException("Price or discount can not be negative");
+        }
         this.date = date;
         this.size = size;
         this.provider = provider;
@@ -47,6 +53,23 @@ public class Transaction {
 
     public void setDiscount(double discount) {
         this.discount = discount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return Double.compare(price, that.price) == 0 &&
+                Double.compare(discount, that.discount) == 0 &&
+                Objects.equals(date, that.date) &&
+                size == that.size &&
+                Objects.equals(provider, that.provider);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, size, provider, price, discount);
     }
 
     @Override

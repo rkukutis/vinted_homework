@@ -1,4 +1,6 @@
-package lt.vinted;
+package lt.vinted.entity;
+
+import lt.vinted.enumerated.ShipmentSize;
 
 import java.util.Objects;
 
@@ -13,6 +15,9 @@ public class ShippingProvider {
 
     public ShippingProvider(String fullName, String shortName, double smallShipmentPrice,
                             double mediumShipmentPrice, double largeShipmentPrice) {
+        if (smallShipmentPrice < 0 || mediumShipmentPrice < 0 || largeShipmentPrice < 0) {
+            throw new IllegalArgumentException("Prices can not be negative");
+        }
         this.fullName = fullName;
         this.shortName = shortName;
         this.smallShipmentPrice = smallShipmentPrice;

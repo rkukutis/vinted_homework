@@ -1,4 +1,4 @@
-package lt.vinted;
+package lt.vinted.enumerated;
 
 public enum ShipmentSize {
     SMALL('S'), MEDIUM('M'), LARGE('L');
@@ -6,7 +6,7 @@ public enum ShipmentSize {
     private ShipmentSize(char sizeChar) {
         this.sizeChar = sizeChar;
     }
-    public static ShipmentSize fromOrdinal(String character) {
+    public static ShipmentSize fromSizeChar(String character) {
         char sizeChar = character.charAt(0);
         ShipmentSize size = null;
         switch (sizeChar){
